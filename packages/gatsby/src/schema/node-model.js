@@ -71,6 +71,7 @@ class LocalNodeModel {
     this._prepareNodesQueues = {}
     this._prepareNodesPromises = {}
     this._preparedNodesCache = new Map()
+    this._typedKeyValueIndexes = new Map() // See redux/nodes.js for usage
   }
 
   withContext(context) {
@@ -222,6 +223,7 @@ class LocalNodeModel {
       gqlType,
       resolvedFields: fieldsToResolve,
       nodeTypeNames,
+      typedKeyValueIndexes: this._typedKeyValueIndexes,
     })
 
     let result = queryResult
@@ -447,7 +449,8 @@ class ContextualNodeModel {
   runQuery(args, pageDependencies) {
     return this.nodeModel.runQuery(
       args,
-      this._getFullDependencies(pageDependencies)
+      this._getFullDependencies(pageDependencies),
+      this.context.typedKeyValueIndexes
     )
   }
 
